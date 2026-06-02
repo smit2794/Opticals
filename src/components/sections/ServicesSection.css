@@ -1,0 +1,127 @@
+/* ============================================
+   SERVICES SECTION
+   ============================================ */
+
+.services-section {
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(140, 198, 63, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(212, 179, 90, 0.04) 0%, transparent 40%),
+    linear-gradient(to bottom, var(--primary-dark) 0%, transparent 15%, transparent 85%, var(--primary-dark) 100%),
+    url('/services_bg.png');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.services-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+  z-index: 2;
+}
+
+/* Subtle Professional Grid Overlay */
+.services-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(140, 198, 63, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 198, 63, 0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes gradientMovement {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ---- Parallax Background Shapes ---- */
+.services-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.services-parallax-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.services-parallax-orb-1 {
+  width: 350px;
+  height: 350px;
+  background: rgba(140, 198, 63, 0.06);
+  top: 5%;
+  left: -50px;
+}
+
+.services-parallax-orb-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 242, 0, 0.06);
+  bottom: 5%;
+  right: -50px;
+}
+
+.services-parallax-ring {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 2px dashed rgba(140, 198, 63, 0.15);
+  top: 30%;
+  right: 12%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.services-parallax-ring::before {
+  content: '';
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1px solid rgba(140, 198, 63, 0.06);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+}
+
+@media (max-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .services-parallax-ring {
+    width: 150px;
+    height: 150px;
+    right: 5%;
+  }
+}
+
+@media (max-width: 640px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .services-parallax-ring {
+    display: none;
+  }
+}

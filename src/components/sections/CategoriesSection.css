@@ -1,0 +1,63 @@
+/* ============================================
+   CATEGORIES SECTION
+   ============================================ */
+
+.categories-section {
+  position: relative;
+  overflow: hidden;
+  background-image: 
+    linear-gradient(to bottom, var(--primary-dark) 0%, transparent 15%, transparent 85%, var(--primary-dark) 100%),
+    url('/products_bg.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.categories-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2xl);
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-3xl);
+  padding: var(--space-2xl) 0;
+}
+
+.categories-grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.categories-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2xl);
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 1024px) {
+  .categories-grid-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    padding: var(--space-md) 0;
+  }
+
+  .categories-grid-column {
+    transform: none !important;
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .categories-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-grid-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}
