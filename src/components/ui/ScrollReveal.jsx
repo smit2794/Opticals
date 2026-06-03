@@ -5,6 +5,7 @@ const directionOffsets = {
   down: { x: 0, y: -30 },
   left: { x: 30, y: 0 },
   right: { x: -30, y: 0 },
+  fade: { x: 0, y: 0 },
 };
 
 export default function ScrollReveal({

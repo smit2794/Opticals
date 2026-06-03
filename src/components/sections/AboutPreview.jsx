@@ -19,7 +19,7 @@ const AboutPreview = () => {
       <div className="container">
         <div className="about-preview-content">
           {/* Left - Image */}
-          <ScrollReveal direction="left">
+          <ScrollReveal direction="fade">
             <div className="about-preview-image-wrapper">
               <div className="about-preview-image-frame">
                 <img
@@ -33,7 +33,7 @@ const AboutPreview = () => {
           </ScrollReveal>
 
           {/* Right - Text */}
-          <ScrollReveal direction="right">
+          <ScrollReveal direction="fade">
             <div className="about-preview-text">
               <SectionTitle
                 subtitle="About Us"
@@ -54,45 +54,16 @@ const AboutPreview = () => {
                 of the world&apos;s finest optical brands.
               </p>
 
-              <motion.div
-                className="about-preview-stats"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: { staggerChildren: 0.15, delayChildren: 0.3 }
-                  }
-                }}
-              >
+              <div className="about-preview-stats">
                 {stats.map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    className="about-preview-stat"
-                    variants={{
-                      hidden: { opacity: 0, scale: 0.8, y: 30 },
-                      visible: {
-                        opacity: 1,
-                        scale: 1,
-                        y: 0,
-                        transition: {
-                          type: 'spring',
-                          stiffness: 100,
-                          damping: 15,
-                          mass: 1
-                        }
-                      }
-                    }}
-                  >
+                  <div key={index} className="about-preview-stat">
                     <span className="about-preview-stat-number">
                       <Counter end={stat.end} suffix={stat.suffix} duration={1.5} />
                     </span>
                     <span className="about-preview-stat-label">{stat.label}</span>
-                  </motion.div>
+                  </div>
                 ))}
-              </motion.div>
+              </div>
 
               <Link to="/about" className="btn btn-outline-accent">
                 Learn More
