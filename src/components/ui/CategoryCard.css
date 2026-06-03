@@ -104,9 +104,9 @@
 }
 
 .category-card__name {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 24px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary, #111111);
   margin: 0 0 12px;
   letter-spacing: -0.5px;

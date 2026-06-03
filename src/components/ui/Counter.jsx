@@ -54,7 +54,6 @@ export default function Counter({
       fontFamily: "'Inter', sans-serif",
       fontWeight: 800,
       fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-      color: '#ffffff',
       letterSpacing: '-1px',
       lineHeight: 1.1,
     }}>

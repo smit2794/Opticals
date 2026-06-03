@@ -45,12 +45,7 @@ export default function ProductCard({ product }) {
           />
         </Link>
 
-        {/* Badges */}
-        <div className="product-card__badges">
-          {product.isNew && <span className="product-card__badge product-card__badge--new">New</span>}
-          {product.isBestSeller && <span className="product-card__badge product-card__badge--bestseller">Best Seller</span>}
-          {discount && <span className="product-card__badge product-card__badge--discount">-{discount}%</span>}
-        </div>
+
 
         {/* Wishlist */}
         <button

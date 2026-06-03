@@ -157,7 +157,7 @@
 }
 
 .product-card__name {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
@@ -211,14 +211,14 @@
 }
 
 .product-card__price {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 20px;
   font-weight: 700;
   color: var(--accent-light);
 }
 
 .product-card__original-price {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 14px;
   color: var(--text-secondary);
   text-decoration: line-through;

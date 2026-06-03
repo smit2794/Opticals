@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSearch, FiShoppingBag, FiMenu, FiX } from 'react-icons/fi';
@@ -22,6 +22,27 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
 
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll < 50) {
+        setVisible(true);
+      } else if (currentScroll > lastScrollY.current) {
+        // Scrolling down -> hide header
+        setVisible(false);
+      } else if (currentScroll < lastScrollY.current) {
+        // Scrolling up -> show header
+        setVisible(true);
+      }
+      lastScrollY.current = currentScroll;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const isScrolled = scrollY > 50;
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
@@ -29,16 +50,13 @@ export default function Header() {
 
   return (
     <>
-      <motion.header
-        className={`header ${isScrolled ? 'header--scrolled' : ''}`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+      <header
+        className={`header ${isScrolled ? 'header--scrolled' : ''} ${visible ? 'header--visible' : 'header--hidden'}`}
       >
         <div className="header__container">
           {/* Logo */}
           <Link to="/" className="header__logo" onClick={closeMobileMenu} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/logo.png" alt="Divyang Opticals Logo" style={{ height: '40px', width: 'auto' }} />
+            <img src="/logo1.png" alt="Divyang Opticals Logo" style={{ height: '42px', width: 'auto', borderRadius: '50%' }} />
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Divyang Opticals</span>
           </Link>
 
@@ -117,7 +135,7 @@ export default function Header() {
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile Menu */}
       <AnimatePresence>

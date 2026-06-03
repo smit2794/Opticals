@@ -64,9 +64,9 @@
 }
 
 .service-card__title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 10px;
   letter-spacing: -0.3px;
