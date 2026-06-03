@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 function easeOutQuart(t) {
   return 1 - Math.pow(1 - t, 4);
@@ -11,7 +11,6 @@ export default function Counter({
   prefix = '',
   className = '',
 }) {
-  const [count, setCount] = useState(0);
   const ref = useRef(null);
   const hasAnimated = useRef(false);
 
@@ -19,10 +18,23 @@ export default function Counter({
     const node = ref.current;
     if (!node) return;
 
+    // If it has already animated, keep/ensure the final value is displayed
+    // and skip observer registration entirely
+    if (hasAnimated.current) {
+      node.textContent = `${prefix}${end.toLocaleString()}${suffix}`;
+      return;
+    }
+
+    let animationFrameId = null;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
+          // Unobserve and disconnect immediately to release main thread listener resources
+          observer.unobserve(node);
+          observer.disconnect();
+
           const startTime = performance.now();
           const durationMs = duration * 1000;
 
@@ -32,32 +44,34 @@ export default function Counter({
             const easedProgress = easeOutQuart(progress);
             const currentCount = Math.round(easedProgress * end);
 
-            setCount(currentCount);
+            if (node) {
+              node.textContent = `${prefix}${currentCount.toLocaleString()}${suffix}`;
+            }
 
             if (progress < 1) {
-              requestAnimationFrame(animate);
+              animationFrameId = requestAnimationFrame(animate);
             }
           }
 
-          requestAnimationFrame(animate);
+          animationFrameId = requestAnimationFrame(animate);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     observer.observe(node);
-    return () => observer.disconnect();
-  }, [end, duration]);
+
+    return () => {
+      observer.disconnect();
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [end, duration, prefix, suffix]);
 
   return (
-    <span ref={ref} className={`counter-value ${className}`} style={{
-      fontFamily: "'Inter', sans-serif",
-      fontWeight: 800,
-      fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-      letterSpacing: '-1px',
-      lineHeight: 1.1,
-    }}>
-      {prefix}{count}{suffix}
+    <span ref={ref} className={`counter-value ${className}`}>
+      {prefix}0{suffix}
     </span>
   );
 }

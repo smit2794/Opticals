@@ -67,7 +67,7 @@
 /* Logo */
 .header__logo {
   font-family: 'Inter', sans-serif;
-  font-size: 22px;
+  font-size: 1.45rem;
   font-weight: 900;
   letter-spacing: 1px;
   text-decoration: none;
@@ -84,7 +84,7 @@
 /* Unique rounded button link styling matching the "Dashboard" tab in reference */
 .header__nav-link {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13.5px;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-primary, #111111);
   text-decoration: none;
@@ -129,7 +129,7 @@
   background: transparent;
   border: 1px solid transparent;
   color: var(--text-primary, #111111);
-  font-size: 18px;
+  font-size: 1.15rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,7 +157,7 @@
   background: linear-gradient(135deg, var(--accent), var(--accent-light));
   color: var(--primary-dark);
   font-family: 'Inter', sans-serif;
-  font-size: 10px;
+  font-size: 0.65rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -174,7 +174,7 @@
   background: transparent;
   border: 1px solid transparent;
   color: var(--text-primary, #111111);
-  font-size: 20px;
+  font-size: 1.25rem;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -224,7 +224,7 @@
 
 .mobile-menu__link {
   font-family: 'Inter', sans-serif;
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text-primary, #111111);
   text-decoration: none;
@@ -277,7 +277,7 @@
   }
 
   .header__logo {
-    font-size: 18px;
+    font-size: 1.2rem;
   }
 }
 
@@ -293,6 +293,6 @@
   .header__action-btn {
     width: 36px;
     height: 36px;
-    font-size: 16px;
+    font-size: 1.05rem;
   }
 }

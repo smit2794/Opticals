@@ -72,16 +72,22 @@ const AboutPreview = () => {
                     key={index}
                     className="about-preview-stat"
                     variants={{
-                      hidden: { opacity: 0, y: 20 },
+                      hidden: { opacity: 0, scale: 0.8, y: 30 },
                       visible: {
                         opacity: 1,
+                        scale: 1,
                         y: 0,
-                        transition: { duration: 0.5 }
+                        transition: {
+                          type: 'spring',
+                          stiffness: 100,
+                          damping: 15,
+                          mass: 1
+                        }
                       }
                     }}
                   >
                     <span className="about-preview-stat-number">
-                      <Counter end={stat.end} suffix={stat.suffix} duration={2} />
+                      <Counter end={stat.end} suffix={stat.suffix} duration={1.5} />
                     </span>
                     <span className="about-preview-stat-label">{stat.label}</span>
                   </motion.div>

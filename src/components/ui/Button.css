@@ -24,19 +24,19 @@
 /* Sizes */
 .btn--sm {
   padding: 8px 20px;
-  font-size: 13px;
+  font-size: 0.8rem;
   border-radius: 8px;
 }
 
 .btn--md {
   padding: 12px 28px;
-  font-size: 14px;
+  font-size: 0.9rem;
   border-radius: 10px;
 }
 
 .btn--lg {
   padding: 16px 36px;
-  font-size: 16px;
+  font-size: 1rem;
   border-radius: 12px;
 }
 

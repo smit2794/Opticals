@@ -152,19 +152,19 @@ export default function AboutPage() {
         <div className="container">
           <div className="about-stats-grid glass-card">
             <div className="stats-col">
-              <Counter end={50000} suffix="+" />
+              <Counter end={50000} suffix="+" duration={1.5} />
               <span className="stats-label">Customers Served</span>
             </div>
             <div className="stats-col">
-              <Counter end={10000} suffix="+" />
+              <Counter end={10000} suffix="+" duration={1.5} />
               <span className="stats-label">Products Handcrafted</span>
             </div>
             <div className="stats-col">
-              <Counter end={14} suffix="+" />
+              <Counter end={14} suffix="+" duration={1.5} />
               <span className="stats-label">Years of Experience</span>
             </div>
             <div className="stats-col">
-              <Counter end={99} suffix="%" />
+              <Counter end={99} suffix="%" duration={1.5} />
               <span className="stats-label">Satisfaction Rate</span>
             </div>
           </div>

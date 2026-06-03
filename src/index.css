@@ -59,17 +59,17 @@
   --z-tooltip: 3000;
 
   /* ---- Typography Scale ---- */
-  --font-xs: 0.75rem;
-  --font-sm: 0.875rem;
-  --font-base: 1rem;
-  --font-md: 1.125rem;
-  --font-lg: 1.25rem;
-  --font-xl: 1.5rem;
-  --font-2xl: 2rem;
-  --font-3xl: 2.5rem;
-  --font-4xl: 3rem;
-  --font-5xl: 3.75rem;
-  --font-6xl: 4.5rem;
+  --font-xs: 0.85rem;
+  --font-sm: 0.95rem;
+  --font-base: 1.1rem;
+  --font-md: 1.2rem;
+  --font-lg: 1.35rem;
+  --font-xl: 1.65rem;
+  --font-2xl: 2.2rem;
+  --font-3xl: 2.75rem;
+  --font-4xl: 3.3rem;
+  --font-5xl: 4.1rem;
+  --font-6xl: 4.95rem;
 
   /* ---- Spacing ---- */
   --space-xs: 0.25rem;
@@ -114,7 +114,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 body {
@@ -492,6 +492,17 @@ p {
   border: 1px solid rgba(235, 87, 87, 0.25);
 }
 
+/* ---- Counter Value ---- */
+.counter-value {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1rem, 2vw, 2rem);
+  letter-spacing: -1px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+
 /* ---- Star Rating ---- */
 .star-rating {
   display: inline-flex;
@@ -647,14 +658,14 @@ p {
 }
 
 @media (max-width: 768px) {
-  html { font-size: 15px; }
+  html { font-size: 17px; }
   h1 { font-size: var(--font-3xl); }
   h2 { font-size: var(--font-2xl); }
   h3 { font-size: var(--font-xl); }
 }
 
 @media (max-width: 480px) {
-  html { font-size: 14px; }
+  html { font-size: 16px; }
   h1 { font-size: var(--font-2xl); }
   h2 { font-size: var(--font-xl); }
 }
