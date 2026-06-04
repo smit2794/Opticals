@@ -100,17 +100,8 @@ export function useDeepAR(): UseDeepARReturn {
       const lensNodes = ['lens1', 'lens2', 'Lens1', 'Lens2', 'lens', 'Lens'];
       for (const n of lensNodes) {
         try {
-          deepARService.changeParameterVector(n, 'MeshRenderer', 'u_color', frame.lensColor.r, frame.lensColor.g, frame.lensColor.b, la);
-          deepARService.changeParameterVector(n, 'MeshRenderer', 'color', frame.lensColor.r, frame.lensColor.g, frame.lensColor.b, la);
-        } catch (_) { /* skip */ }
-      }
-
-      // Apply frame color
-      const frameColorNodes = ['frame', 'Frame', 'Glasses', 'glasses'];
-      for (const n of frameColorNodes) {
-        try {
-          deepARService.changeParameterVector(n, 'MeshRenderer', 'u_color', frame.frameColor.r, frame.frameColor.g, frame.frameColor.b, 1.0);
-          deepARService.changeParameterVector(n, 'MeshRenderer', 'color', frame.frameColor.r, frame.frameColor.g, frame.frameColor.b, 1.0);
+          deepARService.changeParameterVector(n, 'MeshRenderer', 'u_color', 1.0, 1.0, 1.0, la);
+          deepARService.changeParameterVector(n, 'MeshRenderer', 'color', 1.0, 1.0, 1.0, la);
         } catch (_) { /* skip */ }
       }
 
@@ -163,7 +154,7 @@ export function useDeepAR(): UseDeepARReturn {
     // Step 2: choose DeepAR or raw fallback based on domain
     const host = window.location.hostname;
     const isDeepARDomain =
-      host === 'divyangopticals.netlify.app' || host === 'divyang123.netlify.app' || host === 'localhost' || host === '127.0.0.1';
+      host === 'divyangopticals.netlify.app' || host === 'localhost' || host === '127.0.0.1';
 
     const EFFECT_URL = 'https://cdn.jsdelivr.net/npm/deepar/effects/aviators';
 
