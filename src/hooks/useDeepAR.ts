@@ -55,15 +55,13 @@ export function useDeepAR(): UseDeepARReturn {
     return () => clearRecordingTimer();
   }, [isRecording, clearRecordingTimer]);
 
-  /**
-   * Initializes the DeepAR instance.
-   */
   const init = useCallback(async (previewElement: HTMLElement, effectUrl: string) => {
     setIsLoading(true);
     setIsInitialized(false);
     setError(null);
 
-    const licenseKey = import.meta.env.VITE_DEEPAR_LICENSE_KEY;
+    const rawLicenseKey = import.meta.env.VITE_DEEPAR_LICENSE_KEY;
+    const licenseKey = rawLicenseKey ? rawLicenseKey.trim() : '';
 
     if (!licenseKey) {
       setError(
@@ -80,7 +78,17 @@ export function useDeepAR(): UseDeepARReturn {
       console.error('Failed to initialize try-on:', err);
       
       const errMsg = err?.toString() || '';
+      const errMsgLower = errMsg.toLowerCase();
+      
       if (
+        errMsgLower.includes('license') || 
+        errMsgLower.includes('key') || 
+        errMsgLower.includes('valid')
+      ) {
+        setError(
+          'DeepAR License Validation Failed: The license key is not valid for this domain/IP. If testing locally, make sure to access the site via http://localhost:5173/ instead of 127.0.0.1 or your local network IP, or add your current host/IP in the DeepAR Developer Portal project settings.'
+        );
+      } else if (
         errMsg.includes('NotAllowedError') ||
         errMsg.includes('Permission denied') ||
         err?.name === 'NotAllowedError'
