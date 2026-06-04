@@ -339,14 +339,6 @@ export default function ProductPage() {
                   </Button>
                 </div>
 
-                {/* Virtual Try-On Module Trigger */}
-                {(product.category?.toLowerCase() === 'eyeglasses' ||
-                  product.category?.toLowerCase() === 'sunglasses') && (
-                  <div style={{ marginTop: '12px', marginBottom: '16px' }}>
-                    <DeepARTryOn productName={product.name} effectUrl={product.deepAREffect} />
-                  </div>
-                )}
-
                 {/* Shipping info items */}
                 <div className="shipping-info-grid">
                   <div className="info-item">

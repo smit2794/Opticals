@@ -8,6 +8,11 @@ export interface DeepARInstance {
   finishVideoRecording: () => Promise<Blob>;
   startCamera: (cameraOptions?: { mirror?: boolean }) => Promise<void>;
   stopCamera: () => void;
+  changeParameter?: (nodeName: string, componentName: string, parameterName: string, value: any) => void;
+  changeParameterFloat?: (gameObject: string, component: string, parameter: string, value: number) => void;
+  changeParameterBool?: (gameObject: string, component: string, parameter: string, value: boolean) => void;
+  changeParameterVector?: (gameObject: string, component: string, parameter: string, x: number, y: number, z: number, w: number) => void;
+  changeParameterTexture?: (gameObject: string, component: string, parameter: string, textureUrl: string) => Promise<void>;
 }
 
 class DeepARService {
@@ -123,6 +128,100 @@ class DeepARService {
    */
   getInstance(): DeepARInstance | null {
     return this.instance;
+  }
+
+  /**
+   * Modifies a material, texture, shader, or transform parameter on a specific 3D node.
+   */
+  changeParameter(
+    nodeName: string,
+    componentName: string,
+    parameterName: string,
+    value: any
+  ): void {
+    if (!this.instance) {
+      throw new Error('DeepAR is not initialized.');
+    }
+    if (typeof (this.instance as any).changeParameter === 'function') {
+      (this.instance as any).changeParameter(nodeName, componentName, parameterName, value);
+    } else {
+      console.warn('changeParameter method not supported on this DeepAR instance.');
+    }
+  }
+
+  changeParameterFloat(
+    gameObject: string,
+    component: string,
+    parameter: string,
+    value: number
+  ): void {
+    if (!this.instance) {
+      throw new Error('DeepAR is not initialized.');
+    }
+    if (typeof this.instance.changeParameterFloat === 'function') {
+      this.instance.changeParameterFloat(gameObject, component, parameter, value);
+    } else if (typeof (this.instance as any).changeParameterFloat === 'function') {
+      (this.instance as any).changeParameterFloat(gameObject, component, parameter, value);
+    } else {
+      console.warn('changeParameterFloat method not supported on this DeepAR instance.');
+    }
+  }
+
+  changeParameterBool(
+    gameObject: string,
+    component: string,
+    parameter: string,
+    value: boolean
+  ): void {
+    if (!this.instance) {
+      throw new Error('DeepAR is not initialized.');
+    }
+    if (typeof this.instance.changeParameterBool === 'function') {
+      this.instance.changeParameterBool(gameObject, component, parameter, value);
+    } else if (typeof (this.instance as any).changeParameterBool === 'function') {
+      (this.instance as any).changeParameterBool(gameObject, component, parameter, value);
+    } else {
+      console.warn('changeParameterBool method not supported on this DeepAR instance.');
+    }
+  }
+
+  changeParameterVector(
+    gameObject: string,
+    component: string,
+    parameter: string,
+    x: number,
+    y: number,
+    z: number,
+    w: number
+  ): void {
+    if (!this.instance) {
+      throw new Error('DeepAR is not initialized.');
+    }
+    if (typeof this.instance.changeParameterVector === 'function') {
+      this.instance.changeParameterVector(gameObject, component, parameter, x, y, z, w);
+    } else if (typeof (this.instance as any).changeParameterVector === 'function') {
+      (this.instance as any).changeParameterVector(gameObject, component, parameter, x, y, z, w);
+    } else {
+      console.warn('changeParameterVector method not supported on this DeepAR instance.');
+    }
+  }
+
+  async changeParameterTexture(
+    gameObject: string,
+    component: string,
+    parameter: string,
+    textureUrl: string
+  ): Promise<void> {
+    if (!this.instance) {
+      throw new Error('DeepAR is not initialized.');
+    }
+    if (typeof this.instance.changeParameterTexture === 'function') {
+      await this.instance.changeParameterTexture(gameObject, component, parameter, textureUrl);
+    } else if (typeof (this.instance as any).changeParameterTexture === 'function') {
+      await (this.instance as any).changeParameterTexture(gameObject, component, parameter, textureUrl);
+    } else {
+      console.warn('changeParameterTexture method not supported on this DeepAR instance.');
+    }
   }
 }
 

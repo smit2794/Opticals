@@ -1,26 +1,27 @@
 // src/components/VirtualTryOnModal.tsx
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { FiX, FiCamera, FiVideo, FiSquare, FiAlertTriangle } from 'react-icons/fi';
 import { useDeepAR } from '../hooks/useDeepAR';
+import TRY_ON_FRAMES from '../data/tryOnFrames';
+import type { TryOnFrame } from '../data/tryOnFrames';
 import '../styles/VirtualTryOn.css';
 
 interface VirtualTryOnModalProps {
   isOpen: boolean;
   onClose: () => void;
-  productName: string;
-  effectUrl: string;
 }
 
 export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
   isOpen,
   onClose,
-  productName,
-  effectUrl,
 }) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const [selectedFrame, setSelectedFrame] = useState<TryOnFrame>(TRY_ON_FRAMES[0]);
+  const selectedFrameRef = useRef<TryOnFrame>(TRY_ON_FRAMES[0]);
 
   const {
     isLoading,
@@ -29,6 +30,7 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
     isRecording,
     recordingDuration,
     init,
+    changeFrame,
     capture,
     startRecord,
     stopRecord,
@@ -39,46 +41,38 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       previousFocusRef.current = document.activeElement as HTMLElement;
-      // Focus close button on mount
-      setTimeout(() => {
-        closeBtnRef.current?.focus();
-      }, 100);
+      setTimeout(() => { closeBtnRef.current?.focus(); }, 100);
 
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          onClose();
-        }
+        if (e.key === 'Escape') onClose();
       };
-
       window.addEventListener('keydown', handleKeyDown);
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown);
-      };
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }
   }, [isOpen, onClose]);
 
   // Restore Focus on Unmount
   useEffect(() => {
-    return () => {
-      if (previousFocusRef.current) {
-        previousFocusRef.current.focus();
-      }
-    };
+    return () => previousFocusRef.current?.focus();
   }, []);
 
   // Initialize DeepAR once the element becomes available
   useEffect(() => {
     if (isOpen && previewRef.current) {
-      init(previewRef.current, effectUrl);
+      init(previewRef.current, selectedFrameRef.current);
     }
-    return () => {
-      shutdown();
-    };
-  }, [isOpen, effectUrl, init, shutdown]);
+    return () => shutdown();
+  }, [isOpen, init, shutdown]);
+
+  // Frame selection from carousel
+  const handleFrameSelect = useCallback((frame: TryOnFrame) => {
+    selectedFrameRef.current = frame;
+    setSelectedFrame(frame);
+    changeFrame(frame);
+  }, [changeFrame]);
 
   if (!isOpen) return null;
 
-  // Format Duration Timer (e.g. 00:05)
   const formatDuration = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -93,23 +87,27 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
       aria-labelledby="tryon-modal-title"
     >
       <div className="tryon-modal-content">
-        {/* viewport preview div display */}
         <div className="tryon-viewport-container">
+          
+          {/* DeepAR Canvas Mount Point */}
           <div ref={previewRef} className="tryon-canvas" />
 
-          {/* AR glassmorphic header overlay */}
+          {/* Header */}
           <div className="tryon-header">
             <div className="tryon-title-section">
-              <h2 id="tryon-modal-title" className="tryon-title">
-                Virtual Try-On
-              </h2>
-              <span className="tryon-subtitle">{productName}</span>
+              <h2 id="tryon-modal-title" className="tryon-title">Virtual Try-On</h2>
+              <div className="tryon-subtitle-row">
+                <span className="tryon-subtitle">
+                  {selectedFrame.name} · {selectedFrame.style}
+                </span>
+                <span className="tryon-badge-3d">DeepAR</span>
+              </div>
             </div>
             <button
               ref={closeBtnRef}
               className="tryon-close-btn"
               onClick={onClose}
-              aria-label="Close Virtual Try-On Modal"
+              aria-label="Close Virtual Try-On"
             >
               <FiX />
             </button>
@@ -123,47 +121,69 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
             </div>
           )}
 
-          {/* Initial Loading State */}
+          {/* Loading State */}
           {isLoading && (
             <div className="tryon-status-container">
               <div className="tryon-loader-spinner" />
               <p className="tryon-status-text">
-                Initializing face tracking engine. Please permit camera access when prompted...
+                Initializing DeepAR face tracking engine...
               </p>
             </div>
           )}
 
-          {/* Error and permissions failure state */}
+          {/* Error state */}
           {error && (
-            <div className="tryon-status-container">
-              <FiAlertTriangle className="tryon-status-icon-error" />
-              <p className="tryon-status-text">{error}</p>
-              <button
-                className="tryon-action-btn"
-                onClick={onClose}
-                aria-label="Close try-on modal after error"
-              >
-                Close View
-              </button>
+            <div className="tryon-error-banner" role="alert">
+              <FiAlertTriangle />
+              <span>{error}</span>
             </div>
           )}
 
-          {/* AR actions control panels */}
+          {/* Bottom Controls Overlay */}
           {isInitialized && !error && (
             <div className="tryon-controls-overlay">
+              
+              {/* 8-Frame selector carousel */}
+              <div className="tryon-frames-carousel" aria-label="Choose frame style">
+                {TRY_ON_FRAMES.map((frame) => {
+                  const active = selectedFrame.id === frame.id;
+                  return (
+                    <button
+                      key={frame.id}
+                      className={`tryon-frame-card${active ? ' tryon-frame-card--active' : ''}`}
+                      onClick={() => handleFrameSelect(frame)}
+                      aria-label={`Try ${frame.name}`}
+                      aria-pressed={active}
+                    >
+                      <div className="tryon-frame-img-container">
+                        <img
+                          src={frame.overlayImage}
+                          alt={frame.name}
+                          className="tryon-frame-img"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="tryon-frame-info">
+                        <span className="tryon-frame-name">{frame.name}</span>
+                        <span className="tryon-frame-style">{frame.style}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Action Buttons */}
               <div className="tryon-buttons-row">
-                {/* Take Photo button */}
                 <button
                   className="tryon-action-btn tryon-action-btn--capture"
-                  onClick={capture}
-                  aria-label="Capture screenshot of try-on"
+                  onClick={() => capture()}
+                  aria-label="Take a photo"
                   disabled={isRecording}
                 >
                   <FiCamera />
                   <span>Snap Photo</span>
                 </button>
 
-                {/* Record video toggle button */}
                 {isRecording ? (
                   <button
                     className="tryon-action-btn tryon-action-btn--recording-active"
@@ -186,6 +206,7 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
               </div>
             </div>
           )}
+
         </div>
       </div>
     </div>

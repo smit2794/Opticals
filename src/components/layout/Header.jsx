@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiShoppingBag, FiMenu, FiX } from 'react-icons/fi';
+import { FiSearch, FiShoppingBag, FiMenu, FiX, FiEye } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import useScrollPosition from '../../hooks/useScrollPosition';
 import SearchModal from '../ui/SearchModal';
 import CartDrawer from '../ui/CartDrawer';
+import { VirtualTryOnModal } from '../VirtualTryOnModal';
 import './Header.css';
 
 const navLinks = [
@@ -21,6 +22,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [tryOnOpen, setTryOnOpen] = useState(false);
 
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
@@ -78,6 +80,15 @@ export default function Header() {
 
           {/* Right Actions */}
           <div className="header__actions">
+            <button
+              className="header__tryon-btn"
+              onClick={() => setTryOnOpen(true)}
+              aria-label="Launch Virtual Try-On"
+            >
+              <FiEye />
+              <span className="header__tryon-text">Try-On</span>
+            </button>
+
             <button
               className="header__action-btn"
               onClick={() => setSearchOpen(true)}
@@ -180,6 +191,7 @@ export default function Header() {
       {/* Modals */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <VirtualTryOnModal isOpen={tryOnOpen} onClose={() => setTryOnOpen(false)} />
     </>
   );
 }
