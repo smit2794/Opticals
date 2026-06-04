@@ -163,7 +163,7 @@ export function useDeepAR(): UseDeepARReturn {
     // Step 2: choose DeepAR or raw fallback based on domain
     const host = window.location.hostname;
     const isDeepARDomain =
-      host === 'divyangopticals.netlify.app' || host === 'localhost' || host === '127.0.0.1';
+      host === 'divyangopticals.netlify.app' || host === 'divyang123.netlify.app' || host === 'localhost' || host === '127.0.0.1';
 
     const EFFECT_URL = 'https://cdn.jsdelivr.net/npm/deepar/effects/aviators';
 
