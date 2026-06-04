@@ -17,6 +17,7 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
   onClose,
 }) => {
   const previewRef = useRef<HTMLDivElement>(null);
+  const fallbackVideoRef = useRef<HTMLVideoElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -29,6 +30,8 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
     error,
     isRecording,
     recordingDuration,
+    isCameraOnly,
+    cameraStream,
     init,
     changeFrame,
     capture,
@@ -55,6 +58,13 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
   useEffect(() => {
     return () => previousFocusRef.current?.focus();
   }, []);
+
+  // Handle fallback camera stream attachment
+  useEffect(() => {
+    if (isCameraOnly && cameraStream && fallbackVideoRef.current) {
+      fallbackVideoRef.current.srcObject = cameraStream;
+    }
+  }, [isCameraOnly, cameraStream]);
 
   // Initialize DeepAR once the element becomes available
   useEffect(() => {
@@ -90,7 +100,19 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
         <div className="tryon-viewport-container">
           
           {/* DeepAR Canvas Mount Point */}
-          <div ref={previewRef} className="tryon-canvas" />
+          <div ref={previewRef} className="tryon-canvas" style={{ display: isCameraOnly ? 'none' : 'block' }} />
+
+          {/* Fallback Raw Camera Video (if DeepAR fails) */}
+          {isCameraOnly && (
+            <video
+              ref={fallbackVideoRef}
+              autoPlay
+              playsInline
+              muted
+              className="tryon-video-feed"
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }}
+            />
+          )}
 
           {/* Header */}
           <div className="tryon-header">
@@ -100,7 +122,11 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
                 <span className="tryon-subtitle">
                   {selectedFrame.name} · {selectedFrame.style}
                 </span>
-                <span className="tryon-badge-3d">DeepAR</span>
+                {isCameraOnly ? (
+                  <span className="tryon-badge-fallback" title="DeepAR failed to load, falling back to basic camera">2D Mode</span>
+                ) : (
+                  <span className="tryon-badge-3d">DeepAR</span>
+                )}
               </div>
             </div>
             <button

@@ -174,10 +174,10 @@ export function useDeepAR(): UseDeepARReturn {
       return;
     }
 
-    // Step 2: choose DeepAR or raw fallback based on domain
-    const host = window.location.hostname;
-    const isDeepARDomain =
-      host === 'divyangopticals.netlify.app' || host === 'localhost' || host === '127.0.0.1';
+    // DeepAR license check happens on their backend based on domain.
+    // We will attempt to initialize on any domain; if it fails (e.g. invalid license),
+    // it will gracefully fall back to the raw camera stream.
+    const isDeepARDomain = true;
 
     const EFFECT_URL = 'https://cdn.jsdelivr.net/npm/deepar/effects/aviators';
 
