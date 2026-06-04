@@ -1,0 +1,388 @@
+/* src/styles/VirtualTryOn.css */
+
+/* --- Full Screen Modal Container --- */
+.tryon-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 14, 39, 0.85); /* Deep dark overlay */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 16px;
+  animation: tryon-fade-in 0.3s ease-out;
+}
+
+@keyframes tryon-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Modal Content Window --- */
+.tryon-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  height: 90vh;
+  max-height: 720px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08); /* Frosted Glass */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  animation: tryon-scale-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tryon-scale-up {
+  from {
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --- Camera Preview Viewport --- */
+.tryon-viewport-container {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tryon-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.tryon-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+/* --- Glassmorphic Overlay Header --- */
+.tryon-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 18px 24px;
+  background: linear-gradient(to bottom, rgba(10, 14, 39, 0.8), transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tryon-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tryon-title {
+  font-family: 'Space Grotesk', sans-serif;
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.tryon-subtitle {
+  font-family: 'Inter', sans-serif;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* --- Header Close Button --- */
+.tryon-close-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.tryon-close-btn:hover,
+.tryon-close-btn:focus-visible {
+  background: rgba(255, 75, 75, 0.2);
+  border-color: rgba(255, 75, 75, 0.4);
+  color: #ff6b6b;
+  transform: scale(1.05);
+}
+
+.tryon-close-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.4);
+}
+
+/* --- AR Action Control Panels --- */
+.tryon-controls-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 24px;
+  background: linear-gradient(to top, rgba(10, 14, 39, 0.9), transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.tryon-buttons-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* --- Reusable Glass Buttons --- */
+.tryon-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  outline: none;
+}
+
+.tryon-action-btn:hover,
+.tryon-action-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.tryon-action-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.tryon-action-btn svg {
+  font-size: 1.15rem;
+}
+
+/* Capture variant styling */
+.tryon-action-btn--capture {
+  background: linear-gradient(135deg, var(--accent, #8cc63f), var(--accent-light, #a2d246));
+  color: #0a0e27;
+  border: none;
+  box-shadow: 0 4px 15px rgba(140, 198, 63, 0.2);
+}
+
+.tryon-action-btn--capture:hover,
+.tryon-action-btn--capture:focus-visible {
+  background: linear-gradient(135deg, var(--accent, #8cc63f), var(--accent-light, #a2d246));
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(140, 198, 63, 0.35);
+}
+
+/* Recording variants styling */
+.tryon-action-btn--recording-active {
+  background: rgba(255, 75, 75, 0.2);
+  border-color: rgba(255, 75, 75, 0.45);
+  color: #ff6b6b;
+  animation: tryon-pulse 2s infinite;
+}
+
+.tryon-action-btn--recording-active:hover {
+  background: rgba(255, 75, 75, 0.3);
+  border-color: rgba(255, 75, 75, 0.6);
+}
+
+@keyframes tryon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 15px 4px rgba(255, 75, 75, 0.6);
+  }
+}
+
+/* --- Record Duration Overlay --- */
+.tryon-recording-timer {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 75, 75, 0.2);
+  border: 1px solid rgba(255, 75, 75, 0.35);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.tryon-timer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff4b4b;
+  animation: tryon-blink 1s steps(2, start) infinite;
+}
+
+@keyframes tryon-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* --- Glassmorphic Loaders & Status States --- */
+.tryon-status-container {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #0a0e27;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px;
+  text-align: center;
+}
+
+.tryon-loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--accent, #8cc63f);
+  border-radius: 50%;
+  animation: tryon-spin 0.8s linear infinite;
+}
+
+@keyframes tryon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tryon-status-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: #ffffff;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.tryon-status-icon-error {
+  font-size: 3rem;
+  color: #ff6b6b;
+}
+
+/* Try-On Launch Button on Product Page */
+.product-tryon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--accent-light, #a2d246);
+  border: 2px solid var(--accent, #8cc63f);
+  background: rgba(140, 198, 63, 0.05);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 15px rgba(140, 198, 63, 0.05);
+  margin-top: 12px;
+  width: 100%;
+}
+
+.product-tryon-btn:hover {
+  background: linear-gradient(135deg, var(--accent, #8cc63f), var(--accent-light, #a2d246));
+  color: #0a0e27;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(140, 198, 63, 0.25);
+}
+
+.product-tryon-btn svg {
+  font-size: 1.2rem;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .tryon-modal-overlay {
+    padding: 0;
+  }
+  
+  .tryon-modal-content {
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    border: none;
+  }
+
+  .tryon-header {
+    padding: 14px 18px;
+  }
+
+  .tryon-title {
+    font-size: 1rem;
+  }
+
+  .tryon-controls-overlay {
+    padding: 18px;
+  }
+
+  .tryon-action-btn {
+    padding: 10px 18px;
+    font-size: 0.75rem;
+  }
+  
+  .tryon-recording-timer {
+    top: 70px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+}

@@ -18,6 +18,7 @@ import ProductCard from '../components/ui/ProductCard';
 import SectionTitle from '../components/ui/SectionTitle';
 import ScrollReveal from '../components/ui/ScrollReveal';
 import Button from '../components/ui/Button';
+import DeepARTryOn from '../components/DeepARTryOn';
 import './ProductPage.css';
 
 const LENS_OPTIONS = [
@@ -337,6 +338,14 @@ export default function ProductPage() {
                     Buy It Now
                   </Button>
                 </div>
+
+                {/* Virtual Try-On Module Trigger */}
+                {(product.category?.toLowerCase() === 'eyeglasses' ||
+                  product.category?.toLowerCase() === 'sunglasses') && (
+                  <div style={{ marginTop: '12px', marginBottom: '16px' }}>
+                    <DeepARTryOn productName={product.name} effectUrl={product.deepAREffect} />
+                  </div>
+                )}
 
                 {/* Shipping info items */}
                 <div className="shipping-info-grid">

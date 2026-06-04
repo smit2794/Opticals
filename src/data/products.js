@@ -9,6 +9,7 @@ const products = [
     id: 1,
     name: 'ClassicView Elite',
     category: 'Eyeglasses',
+    deepAREffect: 'https://cdn.jsdelivr.net/npm/deepar/effects/aviators',
     brand: 'Ray-Ban',
     price: 189.99,
     originalPrice: 249.99,
