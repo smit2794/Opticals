@@ -67,72 +67,58 @@ export function useDeepAR(): UseDeepARReturn {
     return () => clearRecordingTimer();
   }, [isRecording, clearRecordingTimer]);
 
-  /** Apply 3D styling for a specific frame — every frame has unique params */
+  /** Apply 3D scale transforms to morph the aviator base model per frame shape */
   const applyFrameStyling = useCallback(async (frame: TryOnFrame) => {
     if (isCameraOnlyRef.current) return;
     const instance = deepARService.getInstance();
     if (!instance) return;
 
-    // ── Scale ─────────────────────────────────────────────────────────────────
-    // Each frame has its own unique x/y/z scale to morph the base model shape.
     const { x, y, z } = frame.deepARScale;
 
-    // ── Lens colour ───────────────────────────────────────────────────────────
-    // Pulled directly from the frame's unique lensColor object (r/g/b/a).
-    const { r: lr, g: lg, b: lb, a: la } = frame.lensColor;
-
-    // ── Frame/rim colour ──────────────────────────────────────────────────────
-    // Pulled directly from the frame's unique frameColor object.
-    const { r: fr, g: fg, b: fb } = frame.frameColor;
+    // Lenses: clear for eyeglasses
+    const la = frame.lensOpacity;
 
     try {
-      // Apply shape scale — try every known node/component/param name variation
-      const shapeNodes = ['frame', 'Frame', 'Glasses', 'glasses', 'lens1', 'lens2'];
-      const transformComps = ['', 'transform', 'Transform'];
-      const scaleParams = ['scale', 'Scale'];
+      // Apply scale via all known component/param variations for compatibility
+      const nodes = ['frame', 'lens1', 'lens2', 'Glasses', 'glasses', 'Frame'];
+      const components = ['', 'transform', 'Transform'];
+      const params = ['scale', 'Scale'];
 
-      for (const node of shapeNodes) {
-        for (const comp of transformComps) {
-          for (const param of scaleParams) {
-            try { deepARService.changeParameterVector(node, comp, param, x, y, z, 1.0); }
-            catch (_) { /* skip unsupported combos silently */ }
+      for (const node of nodes) {
+        for (const comp of components) {
+          for (const param of params) {
+            try {
+              deepARService.changeParameterVector(node, comp, param, x, y, z, 1.0);
+            } catch (_) {
+              // silently skip unsupported combinations
+            }
           }
         }
       }
 
-      // Apply unique lens tint (RGBA) — fully independent per frame
+      // Apply lens color (clear / tinted)
       const lensNodes = ['lens1', 'lens2', 'Lens1', 'Lens2', 'lens', 'Lens'];
-      const lensColorParams = ['u_color', 'color', 'albedo', 'tint'];
-
       for (const n of lensNodes) {
-        for (const p of lensColorParams) {
-          try { deepARService.changeParameterVector(n, 'MeshRenderer', p, lr, lg, lb, la); }
-          catch (_) { /* skip */ }
-        }
+        try {
+          deepARService.changeParameterVector(n, 'MeshRenderer', 'u_color', frame.lensColor.r, frame.lensColor.g, frame.lensColor.b, la);
+          deepARService.changeParameterVector(n, 'MeshRenderer', 'color', frame.lensColor.r, frame.lensColor.g, frame.lensColor.b, la);
+        } catch (_) { /* skip */ }
       }
 
-      // Apply unique frame/rim colour (RGB) — fully independent per frame
-      const rimNodes = ['frame', 'Frame', 'rim', 'Rim', 'bridge', 'Bridge', 'temple', 'Temple'];
-      const rimColorParams = ['u_color', 'color', 'albedo'];
-
-      for (const n of rimNodes) {
-        for (const p of rimColorParams) {
-          try { deepARService.changeParameterVector(n, 'MeshRenderer', p, fr, fg, fb, 1.0); }
-          catch (_) { /* skip */ }
-        }
+      // Apply frame color
+      const frameColorNodes = ['frame', 'Frame', 'Glasses', 'glasses'];
+      for (const n of frameColorNodes) {
+        try {
+          deepARService.changeParameterVector(n, 'MeshRenderer', 'u_color', frame.frameColor.r, frame.frameColor.g, frame.frameColor.b, 1.0);
+          deepARService.changeParameterVector(n, 'MeshRenderer', 'color', frame.frameColor.r, frame.frameColor.g, frame.frameColor.b, 1.0);
+        } catch (_) { /* skip */ }
       }
 
-      console.log(
-        `[TryOn] ✅ "${frame.name}" applied —`,
-        `scale(${x},${y},${z})`,
-        `lens rgba(${lr},${lg},${lb},${la})`,
-        `frame rgb(${fr},${fg},${fb})`,
-      );
+      console.log(`[TryOn] Applied styling for frame "${frame.name}" — scale:(${x},${y},${z})`);
     } catch (err) {
       console.warn('[TryOn] applyFrameStyling error:', err);
     }
   }, []);
-
 
   /** Initialize DeepAR or fall back to raw webcam */
   const init = useCallback(async (previewElement: HTMLElement, frame: TryOnFrame) => {
@@ -174,10 +160,10 @@ export function useDeepAR(): UseDeepARReturn {
       return;
     }
 
-    // DeepAR license check happens on their backend based on domain.
-    // We will attempt to initialize on any domain; if it fails (e.g. invalid license),
-    // it will gracefully fall back to the raw camera stream.
-    const isDeepARDomain = true;
+    // Step 2: choose DeepAR or raw fallback based on domain
+    const host = window.location.hostname;
+    const isDeepARDomain =
+      host === 'divyangopticals.netlify.app' || host === 'localhost' || host === '127.0.0.1';
 
     const EFFECT_URL = 'https://cdn.jsdelivr.net/npm/deepar/effects/aviators';
 
