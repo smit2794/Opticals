@@ -6,7 +6,8 @@ export interface DeepARInstance {
   takeScreenshot: () => Promise<string>;
   startVideoRecording: () => Promise<void>;
   finishVideoRecording: () => Promise<Blob>;
-  startVideo: (mirror: boolean) => Promise<void>;
+  startCamera: (cameraOptions?: { mirror?: boolean }) => Promise<void>;
+  stopCamera: () => void;
 }
 
 class DeepARService {
@@ -49,7 +50,7 @@ class DeepARService {
       this.instance = deepARInstance as unknown as DeepARInstance;
 
       // Start the live camera feed with mirroring enabled
-      await this.instance.startVideo(true);
+      await this.instance.startCamera({ mirror: true });
 
       return this.instance;
     } catch (error) {
